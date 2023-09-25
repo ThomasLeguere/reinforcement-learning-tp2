@@ -31,12 +31,12 @@ résoudre ce MDP.
 # ----------------------
 # Implémenter un MDP simple avec la librairie `gym`. Ce MDP doit avoir
 # 3 états, 2 actions, et les transitions et récompenses suivantes:
-#   - état 0, action 0 -> état 1, récompense 0
-#   - état 0, action 1 -> état 2, récompense 0
+#   - état 0, action 0 -> état 1, récompense -1
+#   - état 0, action 1 -> état 0, récompense -1
 #   - état 1, action 0 -> état 0, récompense -1
-#   - état 1, action 1 -> état 2, récompense 0
-#   - état 2, action 0 -> état 0, récompense 1
-#   - état 2, action 1 -> état 1, récompense -1
+#   - état 1, action 1 -> état 2, récompense -1
+#   - état 2, action 0 -> état 2, récompense 0
+#   - état 2, action 1 -> état 0, récompense -1
 
 
 class MDP(gym.Env):
