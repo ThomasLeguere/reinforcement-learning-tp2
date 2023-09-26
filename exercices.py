@@ -46,13 +46,18 @@ class MDP(gym.Env):
 
     observation_space: spaces.Discrete
     action_space: spaces.Discrete
+    initial_state: int
 
     # state, action -> [(next_state, reward, done)]
     P: list[list[tuple[int, float, bool]]]
 
     def __init__(self):
+        self.initial_state = random.randint(0, 2)
         # BEGIN SOLUTION
         # END SOLUTION
+
+    def reset(self):
+        self.initial_state = random.randint(0, 2)
 
     def step(self, action: int) -> tuple[int, float, bool, dict]:  # type: ignore
         """
@@ -60,6 +65,7 @@ class MDP(gym.Env):
         Renvoie l'observation suivante, la récompense, un booléen indiquant
         si l'épisode est terminé, et un dictionnaire d'informations.
         """
+        info: dict = {}
         # BEGIN SOLUTION
         # END SOLUTION
 
@@ -77,7 +83,7 @@ def test_mdp():
     mdp.reset()
     ret = mdp.step(0)
     assert ret[0] in [0, 1, 2]
-    assert ret[1] in [0, 1]
+    assert ret[1] in [-1, 0]
     assert ret[2] in [True, False]
     assert isinstance(ret[3], dict)
 
@@ -205,8 +211,8 @@ class GridWorldEnv(gym.Env):
 def grid_world_value_iteration(
     env: GridWorldEnv,
     max_iter: int = 1000,
-    gamma=1.0,
-    theta=1e-5,
+    gamma: float = 1.0,
+    theta: float = 1e-5,
 ) -> np.ndarray:
     """
     Estimation de la fonction de valeur grâce à l'algorithme "value iteration".
@@ -257,7 +263,7 @@ class StochasticGridWorldEnv(GridWorldEnv):
             return (action - 1) % 4
         elif prob < 0.1:  # 10% chance to go right
             return (action + 1) % 4
-        # 80% chance to go in the intended direction
+        # 90% chance to go in the intended direction
         return action
 
     def step(self, action):
@@ -268,13 +274,13 @@ class StochasticGridWorldEnv(GridWorldEnv):
 def stochastic_grid_world_value_iteration(
     env: StochasticGridWorldEnv,
     max_iter: int = 1000,
-    gamma=1.0,
-    theta=1e-5,
+    gamma: float = 1.0,
+    theta: float = 1e-5,
 ) -> np.ndarray:
     values = np.zeros((4, 4))
     # BEGIN SOLUTION
     # END SOLUTION
-    return values
+    raise ValueError("Value iteration did not converge")
 
 
 def test_stochastic_grid_world_value_iteration():
@@ -294,21 +300,13 @@ def test_stochastic_grid_world_value_iteration():
     values = stochastic_grid_world_value_iteration(env, max_iter=1000, gamma=0.9)
     solution = np.array(
         [
-            [0.73150697, 0.83310665, 0.96151603, 0.0],
-            [0.63232473, 0.0, 0.64154523, 0.0],
-            [0.54146311, 0.48655038, 0.54726419, 0.47417735],
-            [0.47112049, 0.43185906, 0.47417735, 0.41635033],
+            [0.77495822, 0.87063224, 0.98343293, 0.0],
+            [0.68591168, 0.0, 0.77736888, 0.0],
+            [0.60732544, 0.60891859, 0.68418232, 0.60570595],
+            [0.54079452, 0.54500607, 0.60570595, 0.53914484],
         ]
     )
     assert np.allclose(values, solution)
-
-
-# Exercice 3: Evaluation de politique
-# -----------------------------------
-# Ecrire une fonction qui évalue la politique suivante:
-#   - état 0, action 0
-#   - état 1, action 0
-#   - état 2, action 1
 
 
 """
