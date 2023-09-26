@@ -259,9 +259,9 @@ def test_grid_world_value_iteration():
 class StochasticGridWorldEnv(GridWorldEnv):
     def _add_noise(self, action: int) -> int:
         prob = random.uniform(0, 1)
-        if prob < 0.05:  # 10% chance to go left
+        if prob < 0.05:  # 5% chance to go left
             return (action - 1) % 4
-        elif prob < 0.1:  # 10% chance to go right
+        elif prob < 0.1:  # 5% chance to go right
             return (action + 1) % 4
         # 90% chance to go in the intended direction
         return action
