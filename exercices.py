@@ -125,11 +125,10 @@ def test_mdp_value_iteration():
 # Exercice 3: Extension du MDP à un GridWorld (sans bruit)
 # --------------------------------------------------------
 # Implémenter un MDP simple avec la librairie `gym`. Ce MDP est formé
-# d'un GridWorld de 3x4 cases, avec 4 actions possibles (haut, bas, gauche,
+# d'un GridWorld de 4x4 cases, avec 4 actions possibles (haut, bas, gauche,
 # droite). La case (1, 1) est inaccessible (mur), tandis que la case (1, 3)
 # est un état terminal avec une récompense de -1. La case (0, 3) est un état
 # terminal avec une récompense de +1. Tout autre état a une récompense de 0.
-# L'agent commence dans la case (0, 0).
 
 # Complétez la classe ci-dessous pour implémenter ce MDP.
 # Puis, utilisez l'algorithme de value iteration pour calculer la fonction de
@@ -147,7 +146,7 @@ class GridWorldEnv(gym.Env):
             ["S", "F", "F", "F"],
         ]
     )
-    current_position: tuple[int, int] = (0, 0)
+    current_position: tuple[int, int] = (3, 0)
 
     def __init__(self):
         super(GridWorldEnv, self).__init__()
