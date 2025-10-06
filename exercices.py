@@ -102,7 +102,6 @@ def test_mdp():
 #
 # Indice: la fonction doit être itérative.
 
-
 def mdp_value_iteration(mdp: MDP, max_iter: int = 1000, gamma=1.0) -> np.ndarray:
     """
     Estimation de la fonction de valeur grâce à l'algorithme "value iteration":
@@ -129,6 +128,7 @@ def test_mdp_value_iteration():
 # droite). La case (1, 1) est inaccessible (mur), tandis que la case (1, 3)
 # est un état terminal avec une récompense de -1. La case (0, 3) est un état
 # terminal avec une récompense de +1. Tout autre état a une récompense de 0.
+# L'agent commence dans la case (3, 0).
 
 # Complétez la classe ci-dessous pour implémenter ce MDP.
 # Puis, utilisez l'algorithme de value iteration pour calculer la fonction de
@@ -154,42 +154,46 @@ class GridWorldEnv(gym.Env):
         self.action_space = spaces.Discrete(4)  # Up, Down, Left, Right
         self.observation_space = spaces.Tuple((spaces.Discrete(4), spaces.Discrete(4)))
 
-        self.current_position = (0, 0)
+        self.current_position = (3, 0)
 
     def step(self, action):
         if action == 0:  # Up
-            self.current_position = (
+            next_position = (
                 max(0, self.current_position[0] - 1),
                 self.current_position[1],
             )
-        elif action == 1:  # Down
-            self.current_position = (
-                min(3, self.current_position[0] + 1),
-                self.current_position[1],
-            )
-        elif action == 2:  # Left
-            self.current_position = (
-                self.current_position[0],
-                max(0, self.current_position[1] - 1),
-            )
-        elif action == 3:  # Right
-            self.current_position = (
+        elif action == 1:  # Right
+            next_position = (
                 self.current_position[0],
                 min(3, self.current_position[1] + 1),
             )
+        elif action == 2:  # Down
+            next_position = (
+                min(3, self.current_position[0] + 1),
+                self.current_position[1],
+            )
+        elif action == 3:  # Left
+            next_position = (
+                self.current_position[0],
+                max(0, self.current_position[1] - 1),
+            )
+        if (self.grid[tuple(next_position)] == "W"):
+            next_position = self.current_position
 
-        next_state = tuple(self.current_position)
+        next_state = tuple(next_position)
 
         # Check if the agent has reached the goal
-        is_done = self.grid[tuple(self.current_position)] in {"P", "N"}
+        is_done = self.grid[tuple(next_position)] in {"P", "N"}
 
         # Provide reward
-        if self.grid[tuple(self.current_position)] == "N":
+        if self.grid[tuple(next_position)] == "N":
             reward = -1
-        elif self.grid[tuple(self.current_position)] == "P":
+        elif self.grid[tuple(next_position)] == "P":
             reward = 1
         else:
             reward = 0
+
+        self.current_state = next_state
 
         return next_state, reward, is_done, {}
 
